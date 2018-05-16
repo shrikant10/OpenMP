@@ -1,0 +1,52 @@
+Works in C C++ Fortran
+
+Moore's Law -  No. of transistors incorporated in chip will approximately double in every two years.
+
+Intel Nvidia IBM AMD Armforce
+
+Concurrency - Multiple tasks are logically active at one time
+Parallism   - Multiple tasks are actually active at one time
+
+Programs >> Concurrency >> Parallism
+
+OpenMP - Open Multi Processing
+
+> We have to find the concurrency in the program.
+> Understand the algorithm strategy
+
+
+1. API for writing multithreaded applications
+2. A set of compiler directive and routines for paralles application programmers.
+3. Greatly simplifies writing multi-threaded (MT) programs in Fortran C C++
+
+
+OpenMP construts 
+
+> Compiler Directives
+> Apply to Structured Block -- 1 entry point & 1 exit point
+
+> gcc -fopenmp foo.c
+
+#include <omp.h>
+
+#pragma omp parallel - Give me the defalut no. of threads
+followed by structure block
+
+Context switching betwwen threads is easy.
+
+Master thread has thread id 0. Rest are 1 2 3 ...
+
+omp_set_num_threads(4);
+omp_get_num_threads();
+omp_get_thread_num();
+
+
+threads have their personal stack and a shared heap
+
+if data is declared inside #pragma omp parallel construct is allocated in stack i.e. it is private to the the thread.
+
+while data declared outside it is allocated in heap and is available to all threads.
+
+double omp_get_wtime();
+
+
