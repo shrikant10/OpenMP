@@ -1,10 +1,13 @@
 #include <stdio.h>
 #include <omp.h>
 
+#define NUM_THREADS 8
+#define PAD 8
+/* PAD is added to ensure cahche line changes every time*/
+
 static long num_steps = 100000000;
 double step;
-#define NUM_THREADS 8
-	
+
 int main(int argc, char **argv){
 
 	step = 1.0/(double)num_steps;
@@ -27,7 +30,7 @@ int main(int argc, char **argv){
 	
 	/* Parallel Implimentaion */
 	int nthreads;
-	double X, PI, SUM[NUM_THREADS];
+	double X, PI, SUM[NUM_THREADS][PAD];
 	omp_set_num_threads(NUM_THREADS);	
 	double c = omp_get_wtime();
 	
@@ -39,14 +42,14 @@ int main(int argc, char **argv){
 				 
 		if(id == 0)	nthreads = nthrds;  //  Check how many threads we got
 		
-		for(i=id, SUM[id]=0.0; i<num_steps; i=i+nthrds){
+		for(i=id, SUM[id][0]=0.0; i<num_steps; i=i+nthrds){
 			X = (i+0.5)*step;
-			SUM[id] += 4.0/(1.0 + X*X);		
+			SUM[id][0] += 4.0/(1.0 + X*X);		
 		}
 	}
 	int i;
 	for(i=0, PI = 0.0; i<nthreads; i++)
-		PI += step*SUM[i];
+		PI += step*SUM[i][0];
 	
 	double d = omp_get_wtime();
 	printf("%lf\n",PI);
